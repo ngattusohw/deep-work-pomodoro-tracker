@@ -1,46 +1,51 @@
-import { Dialogs } from '@nativescript/core';
+import { Alert, TouchableOpacity, Text, View, StyleSheet } from 'react-native';
 import { RouteProp } from '@react-navigation/core';
-import * as React from "react";
-import { StyleSheet } from "react-nativescript";
-import { FrameNavigationProp } from "react-nativescript-navigation";
+import * as React from 'react';
+import { FrameNavigationProp } from 'react-nativescript-navigation';
 
-import { MainStackParamList } from "../NavigationParamList";
+import { MainStackParamList } from '../NavigationParamList';
 
 type ScreenOneProps = {
-    route: RouteProp<MainStackParamList, "One">,
-    navigation: FrameNavigationProp<MainStackParamList, "One">,
+  route: RouteProp<MainStackParamList, 'One'>;
+  navigation: FrameNavigationProp<MainStackParamList, 'One'>;
 };
 
 export function ScreenOne({ navigation }: ScreenOneProps) {
-    return (
-        <flexboxLayout style={styles.container}>
-            <label className="text-2xl mb-4 font-bold text-center">
-                Hello World!
-            </label>
-            <button
-                style={styles.button}
-                onTap={() => Dialogs.alert("Tapped!")}
-            >
-                Tap me for an alert
-            </button>
-            <button
-                style={styles.button}
-                onTap={() => navigation.navigate("Two", { message: "Hello, world!" })}
-            >
-                Go to next screen
-            </button>
-        </flexboxLayout>
-    );
+  return (
+    <View style={styles.container}>
+      <Text style={styles.label}>Hello World!</Text>
+      <TouchableOpacity style={styles.button} onPress={() => Alert.alert('Tapped!')}>
+        <Text style={styles.buttonText}>Tap me for an alert</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate('ScreenTwo', { message: 'Hello, world!' })}
+      >
+        <Text style={styles.buttonText}>Go to next screen</Text>
+      </TouchableOpacity>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        height: "100%",
-        flexDirection: "column",
-        justifyContent: "center",
-    },
-    button: {
-        fontSize: 24,
-        color: "#2e6ddf",
-    },
+  container: {
+    height: '100%',
+    flexDirection: 'column',
+    justifyContent: 'center',
+  },
+  label: {
+    fontSize: 24,
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  button: {
+    padding: 10,
+    backgroundColor: '#2e6ddf',
+    marginBottom: 10,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: 'white',
+    textAlign: 'center',
+  },
 });

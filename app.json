@@ -1,13 +1,26 @@
 {
   "expo": {
+    "name": "deep-work-tracker",
+    "slug": "deep-work-tracker",
+    "scheme": "com.deepwork.pomodoro",
     "newArchEnabled": true,
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": ["**/*"],
+    "plugins": ["expo-router"],
     "extra": {
       "eas": {
         "projectId": "aa3aa4c1-c0c0-4c40-9b29-a011a619572d"
       }
-    },
-    "plugins": [
-      "expo-secure-store"
-    ]
+    }
   }
 }

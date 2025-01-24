@@ -15,7 +15,7 @@ export function AuthScreen({ navigation }: any) {
     });
 
     if (error) Alert.alert(error.message);
-    else navigation.navigate('MainTabs');
+    else navigation.navigate('One');
     setLoading(false);
   }
 
@@ -36,7 +36,7 @@ export function AuthScreen({ navigation }: any) {
         secureTextEntry
       />
       <Button
-        title={loading ? "Loading..." : "Sign in"}
+        title={loading ? 'Loading...' : 'Sign in'}
         onPress={signInWithEmail}
         disabled={loading}
       />
