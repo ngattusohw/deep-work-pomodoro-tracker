@@ -103,6 +103,13 @@ export default function TimerScreen() {
         <Text style={styles.buttonText}>Reset</Text>
       </TouchableOpacity>
 
+      <TouchableOpacity
+        style={[styles.button, styles.resetButton]}
+        onPress={() => handleSessionComplete(true)}
+      >
+        <Text style={styles.buttonText}>Test supabase</Text>
+      </TouchableOpacity>
+
       <Modal visible={showCompletionModal} transparent={true} animationType="slide">
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
