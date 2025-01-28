@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Modal, TextInput, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import CompletePomModal from '../src/components/CompletePomModal';
+import Timer from '../src/components/Timer';
 import { useAuth } from '../src/context/AuthContext';
 import { supabase } from '../src/lib/supabase';
 
@@ -19,7 +21,9 @@ export default function TimerScreen() {
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    return `${mins.toString().padStart(2, '0')}:${secs
+      .toString()
+      .padStart(2, '0')}`;
   };
 
   const saveSession = async (completed: boolean) => {
@@ -66,6 +70,7 @@ export default function TimerScreen() {
   };
 
   const handleSessionComplete = async (completed: boolean) => {
+    // TOOD submit the data from the modal
     await saveSession(completed);
     setShowCompletionModal(false);
     setIsBreak(true);
@@ -73,83 +78,43 @@ export default function TimerScreen() {
     setSessionStartTime(null);
   };
 
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-
-    if (isActive && timeLeft > 0) {
-      interval = setInterval(() => {
-        setTimeLeft((time) => time - 1);
-      }, 1000);
-    } else if (timeLeft === 0) {
-      handleTimerComplete();
-    }
-
-    return () => clearInterval(interval);
-  }, [isActive, timeLeft]);
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{isBreak ? 'Break Time' : 'Focus Time'}</Text>
-      <Text style={styles.timer}>{formatTime(timeLeft)}</Text>
-
+      {/* <Text style={styles.timer}>{formatTime(timeLeft)}</Text> */}
+      <Timer handleTimerComplete={handleTimerComplete} timeLeft={timeLeft} />
       <TouchableOpacity
-        style={[styles.button, isActive ? styles.stopButton : styles.startButton]}
+        style={[
+          styles.button,
+          isActive ? styles.stopButton : styles.startButton,
+        ]}
         onPress={toggleTimer}
       >
         <Text style={styles.buttonText}>{isActive ? 'Pause' : 'Start'}</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={[styles.button, styles.resetButton]} onPress={resetTimer}>
+      <TouchableOpacity
+        style={[styles.button, styles.resetButton]}
+        onPress={resetTimer}
+      >
         <Text style={styles.buttonText}>Reset</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={[styles.button, styles.resetButton]}
-        onPress={() => handleSessionComplete(true)}
+        onPress={() => handleSessionComplete(true)} // TODO add this to complete timer logic
       >
         <Text style={styles.buttonText}>Test supabase</Text>
       </TouchableOpacity>
 
-      <Modal visible={showCompletionModal} transparent={true} animationType="slide">
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Session Complete!</Text>
-
-            <Text style={styles.label}>Distraction Level (1-10):</Text>
-            <TextInput
-              style={styles.input}
-              value={distractionLevel}
-              onChangeText={setDistractionLevel}
-              keyboardType="numeric"
-              maxLength={2}
-            />
-
-            <Text style={styles.label}>Number of Distractions:</Text>
-            <TextInput
-              style={styles.input}
-              value={distractionCount}
-              onChangeText={setDistractionCount}
-              keyboardType="numeric"
-            />
-
-            <View style={styles.modalButtons}>
-              <TouchableOpacity
-                style={[styles.button, styles.successButton]}
-                onPress={() => handleSessionComplete(true)}
-              >
-                <Text style={styles.buttonText}>Complete</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={[styles.button, styles.cancelButton]}
-                onPress={() => handleSessionComplete(false)}
-              >
-                <Text style={styles.buttonText}>Interrupted</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
+      <CompletePomModal
+        handleSessionComplete={handleSessionComplete}
+        showCompletionModal={showCompletionModal}
+        setDistractionLevel={setDistractionLevel}
+        distractionLevel={distractionLevel}
+        distractionCount={distractionCount}
+        setDistractionCount={setDistractionCount}
+      />
     </View>
   );
 }
@@ -189,49 +154,9 @@ const styles = StyleSheet.create({
   resetButton: {
     backgroundColor: '#2196F3',
   },
-  successButton: {
-    backgroundColor: '#4CAF50',
-  },
-  cancelButton: {
-    backgroundColor: '#f44336',
-  },
   buttonText: {
     color: 'white',
     fontSize: 18,
     fontWeight: 'bold',
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalContent: {
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 10,
-    width: '80%',
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  label: {
-    fontSize: 16,
-    marginBottom: 5,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 15,
-  },
-  modalButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: 20,
   },
 });
