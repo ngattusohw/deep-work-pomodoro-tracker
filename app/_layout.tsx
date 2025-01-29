@@ -18,7 +18,7 @@ function MainLayout() {
   return (
     <Tabs>
       <Tabs.Screen
-        name="timer"
+        name="index"
         options={{
           title: 'Timer',
           tabBarIcon: ({ color, size }) => (
@@ -29,6 +29,7 @@ function MainLayout() {
       <Tabs.Screen
         name="login"
         options={{
+          title: 'Login',
           headerShown: false,
           href: '/login',
           tabBarIcon: ({ color, size }) => (
