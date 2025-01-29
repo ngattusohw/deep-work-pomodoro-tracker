@@ -1,49 +1,59 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Modal, TextInput, Alert } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, Modal, Button } from 'react-native';
+import RNPickerSelect from 'react-native-picker-select';
 
-export default function CompletePomModal({handleSessionComplete, showCompletionModal, setDistractionLevel, distractionLevel, distractionCount, setDistractionCount}) {
-
+export default function CompletePomModal({
+  handleSessionComplete,
+  showCompletionModal,
+  setFocusLevel,
+  focusLevel,
+}) {
   return (
-      <Modal visible={showCompletionModal} transparent={true} animationType="slide">
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Session Complete!</Text>
+    <Modal
+      visible={showCompletionModal}
+      transparent={true}
+      animationType="slide"
+    >
+      <View style={styles.modalContainer}>
+        <View style={styles.modalContent}>
+          <Text style={styles.modalTitle}>Focus Session Complete</Text>
 
-            <Text style={styles.label}>Distraction Level (1-10):</Text>
-            <TextInput
-              style={styles.input}
-              value={distractionLevel}
-              onChangeText={setDistractionLevel}
-              keyboardType="numeric"
-              maxLength={2}
-            />
+          <Text style={styles.label}>Focus Level (1-10):</Text>
+          <RNPickerSelect
+            value={focusLevel}
+            onValueChange={value => setFocusLevel(value)}
+            items={[
+              { label: '1', value: '1' },
+              { label: '2', value: '2' },
+              { label: '3', value: '3' },
+              { label: '4', value: '4' },
+              { label: '5', value: '5' },
+              { label: '6', value: '6' },
+              { label: '7', value: '7' },
+              { label: '8', value: '8' },
+              { label: '9', value: '9' },
+              { label: '10', value: '10' },
+            ]}
+          />
 
-            <Text style={styles.label}>Number of Distractions:</Text>
-            <TextInput
-              style={styles.input}
-              value={distractionCount}
-              onChangeText={setDistractionCount}
-              keyboardType="numeric"
-            />
+          <View style={styles.modalButtons}>
+            <Button
+              style={[styles.button, styles.successButton]}
+              onPress={() => handleSessionComplete(true)}
+            >
+              <Text style={styles.buttonText}>Complete</Text>
+            </Button>
 
-            <View style={styles.modalButtons}>
-              <TouchableOpacity
-                style={[styles.button, styles.successButton]}
-                onPress={() => handleSessionComplete(true)}
-              >
-                <Text style={styles.buttonText}>Complete</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={[styles.button, styles.cancelButton]}
-                onPress={() => handleSessionComplete(false)}
-              >
-                <Text style={styles.buttonText}>Interrupted</Text>
-              </TouchableOpacity>
-            </View>
+            <Button
+              style={[styles.button, styles.cancelButton]}
+              onPress={() => handleSessionComplete(false)}
+            >
+              <Text style={styles.buttonText}>Interrupted</Text>
+            </Button>
           </View>
         </View>
-      </Modal>
+      </View>
+    </Modal>
   );
 }
 

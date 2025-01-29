@@ -12,10 +12,10 @@ export default function TimerScreen() {
   const { session } = useAuth();
   const [timeLeft, setTimeLeft] = useState(WORK_TIME);
   const [isActive, setIsActive] = useState(false);
+  const [restartKey, setRestartKey] = useState(1);
   const [isBreak, setIsBreak] = useState(false);
   const [showCompletionModal, setShowCompletionModal] = useState(false);
-  const [distractionLevel, setDistractionLevel] = useState('5');
-  const [distractionCount, setDistractionCount] = useState('0');
+  const [focusLevel, setFocusLevel] = useState('5');
   const [sessionStartTime, setSessionStartTime] = useState<Date | null>(null);
 
   const formatTime = (seconds: number) => {
@@ -36,8 +36,7 @@ export default function TimerScreen() {
         end_time: new Date().toISOString(),
         duration_minutes: 25,
         status: completed ? 'completed' : 'interrupted',
-        distraction_count: parseInt(distractionCount),
-        notes: `Distraction Level: ${distractionLevel}/10`,
+        notes: `Focus Level: ${focusLevel}/10`,
       });
 
       if (error) throw error;
@@ -47,10 +46,10 @@ export default function TimerScreen() {
     }
   };
 
-  const resetTimer = useCallback(() => {
-    setTimeLeft(isBreak ? BREAK_TIME : WORK_TIME);
+  const resetTimer = () => {
+    setRestartKey(restartKey + 1);
     setIsActive(false);
-  }, [isBreak]);
+  };
 
   const toggleTimer = () => {
     if (!isActive && !sessionStartTime) {
@@ -81,8 +80,12 @@ export default function TimerScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{isBreak ? 'Break Time' : 'Focus Time'}</Text>
-      {/* <Text style={styles.timer}>{formatTime(timeLeft)}</Text> */}
-      <Timer handleTimerComplete={handleTimerComplete} timeLeft={timeLeft} />
+      <Timer
+        handleTimerComplete={handleTimerComplete}
+        timeLeft={timeLeft}
+        isPlaying={isActive}
+        restartKey={restartKey}
+      />
       <TouchableOpacity
         style={[
           styles.button,
@@ -110,10 +113,8 @@ export default function TimerScreen() {
       <CompletePomModal
         handleSessionComplete={handleSessionComplete}
         showCompletionModal={showCompletionModal}
-        setDistractionLevel={setDistractionLevel}
-        distractionLevel={distractionLevel}
-        distractionCount={distractionCount}
-        setDistractionCount={setDistractionCount}
+        setFocusLevel={setFocusLevel}
+        focusLevel={focusLevel}
       />
     </View>
   );
