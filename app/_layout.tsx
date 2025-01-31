@@ -21,6 +21,7 @@ function MainLayout() {
         name="index"
         options={{
           title: 'Timer',
+          headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="timer" size={size} color={color} />
           ),

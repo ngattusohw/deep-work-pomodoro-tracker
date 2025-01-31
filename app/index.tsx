@@ -69,7 +69,7 @@ export default function TimerScreen() {
   };
 
   const handleSessionComplete = async (completed: boolean) => {
-    // TOOD submit the data from the modal
+    // TOOD submit the data from the modal - make sure to do 11-focusLevel
     await saveSession(completed);
     setShowCompletionModal(false);
     setIsBreak(true);
