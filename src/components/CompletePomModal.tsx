@@ -20,7 +20,9 @@ export default function CompletePomModal({
 
           <Text style={styles.label}>Focus Level (1-10):</Text>
           <RNPickerSelect
+            style={styles.input}
             value={focusLevel}
+            label="Select focus level"
             onValueChange={value => setFocusLevel(value)}
             items={[
               { label: '1', value: '1' },
@@ -38,18 +40,16 @@ export default function CompletePomModal({
 
           <View style={styles.modalButtons}>
             <Button
+              title="Complete"
               style={[styles.button, styles.successButton]}
               onPress={() => handleSessionComplete(true)}
-            >
-              <Text style={styles.buttonText}>Complete</Text>
-            </Button>
+            />
 
             <Button
               style={[styles.button, styles.cancelButton]}
+              title="Interrupted"
               onPress={() => handleSessionComplete(false)}
-            >
-              <Text style={styles.buttonText}>Interrupted</Text>
-            </Button>
+            />
           </View>
         </View>
       </View>
@@ -93,18 +93,15 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 20,
-    textAlign: 'center',
   },
   label: {
     fontSize: 16,
     marginBottom: 5,
   },
   input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 15,
+    borderWidth: 0.5,
+    borderColor: 'purple',
+    borderRadius: 8,
   },
   modalButtons: {
     flexDirection: 'row',

@@ -5,7 +5,7 @@ import Timer from '../src/components/Timer';
 import { useAuth } from '../src/context/AuthContext';
 import { supabase } from '../src/lib/supabase';
 
-const WORK_TIME = 25 * 60; // 25 minutes in seconds
+const WORK_TIME = 10; // 25 minutes in seconds
 const BREAK_TIME = 5 * 60; // 5 minutes in seconds
 
 export default function TimerScreen() {
