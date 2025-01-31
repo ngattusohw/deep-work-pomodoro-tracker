@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Modal, Button } from 'react-native';
-import RNPickerSelect from 'react-native-picker-select';
+import Slider from '@react-native-community/slider';
 
 export default function CompletePomModal({
   handleSessionComplete,
@@ -18,26 +18,18 @@ export default function CompletePomModal({
         <View style={styles.modalContent}>
           <Text style={styles.modalTitle}>Focus Session Complete</Text>
 
-          <Text style={styles.label}>Focus Level (1-10):</Text>
-          <RNPickerSelect
-            style={styles.input}
+          <Text style={styles.label}>Focus Level:</Text>
+          <Slider
+            step={1}
+            tapToSeek
+            minimumTrackTintColor={'#03540c'}
+            maximumTrackTintColor={'#570211'}
+            minimumValue={1}
+            maximumValue={10}
+            thumbTintColor={'#2196F3'}
             value={focusLevel}
-            label="Select focus level"
             onValueChange={value => setFocusLevel(value)}
-            items={[
-              { label: '1', value: '1' },
-              { label: '2', value: '2' },
-              { label: '3', value: '3' },
-              { label: '4', value: '4' },
-              { label: '5', value: '5' },
-              { label: '6', value: '6' },
-              { label: '7', value: '7' },
-              { label: '8', value: '8' },
-              { label: '9', value: '9' },
-              { label: '10', value: '10' },
-            ]}
           />
-
           <View style={styles.modalButtons}>
             <Button
               title="Complete"

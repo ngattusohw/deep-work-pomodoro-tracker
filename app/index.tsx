@@ -15,7 +15,7 @@ export default function TimerScreen() {
   const [restartKey, setRestartKey] = useState(1);
   const [isBreak, setIsBreak] = useState(false);
   const [showCompletionModal, setShowCompletionModal] = useState(false);
-  const [focusLevel, setFocusLevel] = useState('5');
+  const [focusLevel, setFocusLevel] = useState(6);
   const [sessionStartTime, setSessionStartTime] = useState<Date | null>(null);
 
   const formatTime = (seconds: number) => {
