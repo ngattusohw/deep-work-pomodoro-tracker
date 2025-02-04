@@ -35,7 +35,7 @@ export default function CompletePomModal({
             <View style={styles.verticalContent}>
               <Slider
                 value={focusLevel}
-                onValueChange={value => setFocusLevel(value)}
+                onValueChange={(value) => setFocusLevel(value)}
                 minimumValue={1}
                 maximumValue={10}
                 maximumTrackTintColor="#0c69ab"

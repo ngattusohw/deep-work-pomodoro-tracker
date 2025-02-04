@@ -1,9 +1,7 @@
 import React from 'react';
 import { Text } from 'react-native';
-import {
-  CountdownCircleTimer,
-  useCountdown,
-} from 'react-native-countdown-circle-timer';
+import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
+import { useAuth } from '../context/AuthContext';
 
 export default function Timer({
   handleTimerComplete,
@@ -11,16 +9,17 @@ export default function Timer({
   isPlaying,
   restartKey,
 }) {
-  const {
-    path,
-    pathLength,
-    stroke,
-    strokeDashoffset,
-    remainingTime,
-    elapsedTime,
-    size,
-    strokeWidth,
-  } = useCountdown({ isPlaying: true, duration: 7, colors: '#abc' });
+  const { session } = useAuth();
+  // const {
+  //   path,
+  //   pathLength,
+  //   stroke,
+  //   strokeDashoffset,
+  //   remainingTime,
+  //   elapsedTime,
+  //   size,
+  //   strokeWidth,
+  // } = useCountdown({ isPlaying: true, duration: 7, colors: '#abc' });
 
   return (
     <CountdownCircleTimer

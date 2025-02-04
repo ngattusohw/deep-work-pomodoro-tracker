@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, StyleSheet, Alert, Text } from 'react-native';
 import { useAuth } from '../src/context/AuthContext';
-import { Stack } from 'expo-router';
 
 export default function LoginScreen() {
   const { signIn } = useAuth();

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import CompletePomModal from '../src/components/CompletePomModal';
 import Timer from '../src/components/Timer';
@@ -30,16 +30,21 @@ export default function TimerScreen() {
     if (!session?.user || !sessionStartTime) return;
 
     try {
-      const { error } = await supabase.from('pomodoro_sessions').insert({
-        user_id: session.user.id,
-        start_time: sessionStartTime.toISOString(),
-        end_time: new Date().toISOString(),
-        duration_minutes: 25,
-        status: completed ? 'completed' : 'interrupted',
-        notes: `Focus Level: ${focusLevel}/10`,
-      });
+      let duration_minutes = Math.floor(
+        (new Date().getTime() - sessionStartTime.getTime()) / 60000
+      );
 
-      if (error) throw error;
+      if (duration_minutes > 0) {
+        const { error } = await supabase.from('pomodoro_sessions').insert({
+          user_id: session.user.id,
+          start_time: sessionStartTime.toISOString(),
+          end_time: new Date().toISOString(),
+          duration_minutes,
+          status: completed ? 'completed' : 'interrupted',
+          notes: `${isBreak ? 'Break' : 'Focus'} - Level: ${focusLevel}/10`,
+        });
+        if (error) throw error;
+      }
     } catch (error) {
       console.error('Error saving session:', error);
       Alert.alert('Error', 'Failed to save session.');
@@ -79,6 +84,7 @@ export default function TimerScreen() {
 
   return (
     <View style={styles.container}>
+      {session?.user && <Text style={styles.title}>{session.user.email}</Text>}
       <Text style={styles.title}>{isBreak ? 'Break Time' : 'Focus Time'}</Text>
       <Timer
         handleTimerComplete={handleTimerComplete}
@@ -101,6 +107,13 @@ export default function TimerScreen() {
         onPress={resetTimer}
       >
         <Text style={styles.buttonText}>Reset</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={[styles.button, styles.resetButton]}
+        onPress={() => setIsBreak(!isBreak)}
+      >
+        <Text style={styles.buttonText}>Switch Modes</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
