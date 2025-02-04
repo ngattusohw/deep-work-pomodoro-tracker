@@ -74,7 +74,7 @@ export default function TimerScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{isBreak ? 'Break Time' : 'Focus Time'}</Text>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={[
           styles.button,
           isActive ? styles.stopButton : styles.startButton,
@@ -82,7 +82,7 @@ export default function TimerScreen() {
         onPress={toggleTimer}
       >
         <Text style={styles.buttonText}>{isActive ? 'Pause' : 'Start'}</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       <RotatingTimer />
       {/* <Timer
         handleTimerComplete={handleTimerComplete}
