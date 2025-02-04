@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import CompletePomModal from '../src/components/CompletePomModal';
 import Timer from '../src/components/Timer';
+import RotatingTimer from '../src/components/RotatingTimer';
 import { useAuth } from '../src/context/AuthContext';
 import { supabase } from '../src/lib/supabase';
 
@@ -17,14 +18,6 @@ export default function TimerScreen() {
   const [showCompletionModal, setShowCompletionModal] = useState(false);
   const [focusLevel, setFocusLevel] = useState(6);
   const [sessionStartTime, setSessionStartTime] = useState<Date | null>(null);
-
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs
-      .toString()
-      .padStart(2, '0')}`;
-  };
 
   const saveSession = async (completed: boolean) => {
     if (!session?.user || !sessionStartTime) return;
@@ -74,18 +67,13 @@ export default function TimerScreen() {
     setShowCompletionModal(false);
     setIsBreak(true);
     setTimeLeft(BREAK_TIME);
+    setIsActive(true);
     setSessionStartTime(null);
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{isBreak ? 'Break Time' : 'Focus Time'}</Text>
-      <Timer
-        handleTimerComplete={handleTimerComplete}
-        timeLeft={timeLeft}
-        isPlaying={isActive}
-        restartKey={restartKey}
-      />
       <TouchableOpacity
         style={[
           styles.button,
@@ -95,7 +83,15 @@ export default function TimerScreen() {
       >
         <Text style={styles.buttonText}>{isActive ? 'Pause' : 'Start'}</Text>
       </TouchableOpacity>
+      <RotatingTimer />
+      {/* <Timer
+        handleTimerComplete={handleTimerComplete}
+        timeLeft={timeLeft}
+        isPlaying={isActive}
+        restartKey={restartKey}
+      /> */}
 
+      {/* 
       <TouchableOpacity
         style={[styles.button, styles.resetButton]}
         onPress={resetTimer}
@@ -108,7 +104,7 @@ export default function TimerScreen() {
         onPress={() => handleSessionComplete(true)} // TODO add this to complete timer logic
       >
         <Text style={styles.buttonText}>Test supabase</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       <CompletePomModal
         handleSessionComplete={handleSessionComplete}
