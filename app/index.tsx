@@ -6,7 +6,7 @@ import { useAuth } from '../src/context/AuthContext';
 import { supabase } from '../src/lib/supabase';
 
 const WORK_TIME = 10; // 25 minutes in seconds
-const BREAK_TIME = 5 * 60; // 5 minutes in seconds
+const BREAK_TIME = 5; // 5 minutes in seconds
 
 export default function TimerScreen() {
   const { session } = useAuth();
@@ -64,23 +64,22 @@ export default function TimerScreen() {
   };
 
   const handleTimerComplete = () => {
-    if (!isBreak) {
-      setShowCompletionModal(true);
-      setIsActive(false);
-    } else {
-      resetTimer();
-      setIsBreak(false);
-    }
+    setShowCompletionModal(true);
+    setIsActive(false);
   };
 
   const handleSessionComplete = async (completed: boolean) => {
     // TOOD submit the data from the modal - make sure to do 11-focusLevel
     await saveSession(completed);
     setShowCompletionModal(false);
-    setIsBreak(true);
-    setTimeLeft(BREAK_TIME);
+    setIsBreak(!isBreak);
     setSessionStartTime(null);
+    resetTimer();
   };
+
+  useEffect(() => {
+    setTimeLeft(isBreak ? BREAK_TIME : WORK_TIME);
+  }, [isBreak]);
 
   return (
     <View style={styles.container}>
@@ -116,12 +115,12 @@ export default function TimerScreen() {
         <Text style={styles.buttonText}>Switch Modes</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={[styles.button, styles.resetButton]}
         onPress={() => handleSessionComplete(true)} // TODO add this to complete timer logic
       >
         <Text style={styles.buttonText}>Test supabase</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       <CompletePomModal
         handleSessionComplete={handleSessionComplete}
