@@ -5,8 +5,8 @@ import Timer from '../src/components/Timer';
 import { useAuth } from '../src/context/AuthContext';
 import { supabase } from '../src/lib/supabase';
 
-const WORK_TIME = 10; // 25 minutes in seconds
-const BREAK_TIME = 5; // 5 minutes in seconds
+const WORK_TIME = 25 * 60; // 25 minutes in seconds
+const BREAK_TIME = 5 * 60; // 5 minutes in seconds
 
 export default function TimerScreen() {
   const { session } = useAuth();
@@ -27,12 +27,15 @@ export default function TimerScreen() {
   };
 
   const saveSession = async (completed: boolean) => {
+    console.log('saving session');
     if (!session?.user || !sessionStartTime) return;
+    console.log('session user', session.user);
 
     try {
       let duration_minutes = Math.floor(
         (new Date().getTime() - sessionStartTime.getTime()) / 60000
       );
+      console.log('duration minutes', duration_minutes);
 
       if (duration_minutes > 0) {
         const { error } = await supabase.from('pomodoro_sessions').insert({
@@ -49,6 +52,8 @@ export default function TimerScreen() {
       console.error('Error saving session:', error);
       Alert.alert('Error', 'Failed to save session.');
     }
+
+    console.log('session saved');
   };
 
   const resetTimer = () => {
@@ -91,15 +96,29 @@ export default function TimerScreen() {
         isPlaying={isActive}
         restartKey={restartKey}
       />
-      <TouchableOpacity
-        style={[
-          styles.button,
-          isActive ? styles.stopButton : styles.startButton,
-        ]}
-        onPress={toggleTimer}
-      >
-        <Text style={styles.buttonText}>{isActive ? 'Pause' : 'Start'}</Text>
-      </TouchableOpacity>
+      {!isActive ? (
+        <TouchableOpacity
+          style={[styles.button, styles.startButton]}
+          onPress={toggleTimer}
+        >
+          <Text style={styles.buttonText}>Start</Text>
+        </TouchableOpacity>
+      ) : (
+        <View style={styles.buttonRow}>
+          <TouchableOpacity
+            style={[styles.buttonHalf, styles.stopButton]}
+            onPress={toggleTimer}
+          >
+            <Text style={styles.buttonText}>⏸️</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.buttonHalf, styles.finishButton]}
+            onPress={handleTimerComplete}
+          >
+            <Text style={styles.buttonText}>Finish Early</Text>
+          </TouchableOpacity>
+        </View>
+      )}
 
       <TouchableOpacity
         style={[styles.button, styles.resetButton]}
@@ -171,5 +190,22 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    paddingHorizontal: 20,
+    marginVertical: 10,
+  },
+  buttonHalf: {
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    borderRadius: 25,
+    width: '48%', // Leave small gap between buttons
+    alignItems: 'center',
+  },
+  finishButton: {
+    backgroundColor: '#FF9800', // Orange color for finish early
   },
 });
