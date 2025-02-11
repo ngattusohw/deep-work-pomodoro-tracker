@@ -7,24 +7,24 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native';
-import CircleWithLine from './CircleSvg';
+import PinkClock from '../../assets/pink_clock.png'; // Update this path
 
 export default function RotatingTimer() {
   const [isTiming, setIsTiming] = useState(false);
   const animationValue = useRef(new Animated.Value(0)).current;
   const progressRef = useRef(0);
   const isFirstStart = useRef(true);
+  const workTime = 25 * 60000;
+  const breakTime = 5 * 6000;
 
   const handleTimer = () => {
     if (isTiming) {
-      // Pause
       animationValue.stopAnimation(value => {
         progressRef.current = value;
       });
       setIsTiming(false);
     } else {
       if (isFirstStart.current) {
-        // Initial start
         animationValue.setValue(0);
         isFirstStart.current = false;
         Animated.timing(animationValue, {
@@ -32,9 +32,12 @@ export default function RotatingTimer() {
           duration: 8000,
           useNativeDriver: true,
           easing: Easing.linear,
-        }).start();
+        }).start(({ finished }) => {
+          if (finished) {
+            isFirstStart.current = true;
+          }
+        });
       } else {
-        // Resume
         Animated.timing(animationValue, {
           toValue: 1,
           duration: 8000 * (1 - progressRef.current),
@@ -83,7 +86,14 @@ export default function RotatingTimer() {
       </TouchableOpacity>
       <View style={styles.container}>
         <Animated.View style={[styles.box, combinedStyle]}>
-          <CircleWithLine />
+          <Animated.Image
+            source={PinkClock}
+            style={{
+              width: '100%',
+              height: '100%',
+              resizeMode: 'contain',
+            }}
+          />
         </Animated.View>
       </View>
     </View>
