@@ -52,12 +52,12 @@ export default function RotatingTimer() {
       if (isFirstStart.current) {
         // Initial start
         setTimeLeft(workTime);
-        // Start from 1 (full rotation) and animate to 0
         animationValue.setValue(1);
         isFirstStart.current = false;
+
         Animated.timing(animationValue, {
           toValue: 0,
-          duration: workTime * 1000,
+          duration: workTime * 1000, // Duration matches the timer exactly
           useNativeDriver: true,
           easing: Easing.linear,
         }).start(({ finished }) => {
@@ -83,7 +83,7 @@ export default function RotatingTimer() {
         // Resume from current position
         Animated.timing(animationValue, {
           toValue: 0,
-          duration: timeLeft * 1000 * progressRef.current, // Use remaining progress
+          duration: timeLeft * 1000, // Use exact remaining time
           useNativeDriver: true,
           easing: Easing.linear,
         }).start();
@@ -108,7 +108,7 @@ export default function RotatingTimer() {
       {
         rotate: animationValue.interpolate({
           inputRange: [0, 1],
-          outputRange: ['0deg', `-${(timeLeft / 3600) * 360}deg`], // Scale to 60 minutes (3600 seconds)
+          outputRange: ['0deg', `${-(workTime / 60) * 6}deg`], // 6 degrees per minute (360/60)
         }),
       },
     ],
