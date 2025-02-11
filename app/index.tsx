@@ -10,6 +10,7 @@ const WORK_TIME = 10; // 25 minutes in seconds
 const BREAK_TIME = 5 * 60; // 5 minutes in seconds
 
 export default function TimerScreen() {
+  // TODO import the font abel - https://www.npmjs.com/package/@expo-google-fonts/abel
   const { session } = useAuth();
   const [timeLeft, setTimeLeft] = useState(WORK_TIME);
   const [isActive, setIsActive] = useState(false);
