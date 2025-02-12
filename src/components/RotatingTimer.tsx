@@ -9,8 +9,8 @@ import Animated, {
   withTiming,
   Easing,
   cancelAnimation,
+  runOnJS,
 } from 'react-native-reanimated';
-import TestSquare from './TestSquare';
 
 export default function RotatingTimer() {
   const WORK = 5;
@@ -24,11 +24,18 @@ export default function RotatingTimer() {
   const rotation = useSharedValue(361 - (WORK * 360) / 60); // initial angle slightly off
   const savedRotation = useSharedValue(361 - (WORK * 360) / 60);
 
-  const rotationGesture = Gesture.Rotation()
+  const rotationGesture = Gesture.Pan()
     .onUpdate(e => {
-      rotation.value = savedRotation.value + e.rotation;
+      'worklet';
+      // Convert the pan movement to rotation degrees
+      // You can adjust the division factor (30) to make rotation more/less sensitive
+      const rotationDelta = (e.translationX + e.translationY) / 10;
+      rotation.value = savedRotation.value + rotationDelta;
+      const seconds = 3612 - (rotation.value * 3600) / 360;
+      runOnJS(setTimeLeft)(Math.round(seconds)); // Wrap with runOnJS
     })
     .onEnd(() => {
+      'worklet';
       savedRotation.value = rotation.value;
     });
 
@@ -65,7 +72,7 @@ export default function RotatingTimer() {
       rotation.value = withTiming(
         360,
         {
-          duration: workTime * 1000, // TODO make this work or break time
+          duration: timeLeft * 1000, // TODO make this work or break time
           easing: Easing.linear,
         },
         finished => {
@@ -75,7 +82,7 @@ export default function RotatingTimer() {
         }
       );
       if (isFirstStart.current) {
-        setTimeLeft(workTime);
+        // setTimeLeft(workTime);
         timerRef.current = setInterval(() => {
           setTimeLeft(prev => {
             if (prev <= 1) {
@@ -158,7 +165,6 @@ export default function RotatingTimer() {
           Reset
         </Text>
       </TouchableOpacity>
-      <TestSquare />
       <View style={styles.container}>
         <GestureDetector gesture={rotationGesture}>
           <Animated.View style={[styles.box, animatedStyle]}>
