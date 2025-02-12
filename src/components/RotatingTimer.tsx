@@ -10,6 +10,7 @@ import Animated, {
   Easing,
   cancelAnimation,
 } from 'react-native-reanimated';
+import TestSquare from './TestSquare';
 
 export default function RotatingTimer() {
   const WORK = 5;
@@ -135,7 +136,6 @@ export default function RotatingTimer() {
           {isFirstStart.current ? 'Start' : isTiming ? 'Pause' : 'Resume'}
         </Text>
       </TouchableOpacity>
-
       <TouchableOpacity
         style={{
           paddingHorizontal: 30,
@@ -158,19 +158,21 @@ export default function RotatingTimer() {
           Reset
         </Text>
       </TouchableOpacity>
+      <TestSquare />
       <View style={styles.container}>
-        <Animated.View style={[styles.box, animatedStyle]}>
-          <Animated.Image
-            source={GreenClock}
-            style={{
-              width: '100%',
-              height: '100%',
-              resizeMode: 'contain',
-            }}
-          />
-        </Animated.View>
+        <GestureDetector gesture={rotationGesture}>
+          <Animated.View style={[styles.box, animatedStyle]}>
+            <Animated.Image
+              source={GreenClock}
+              style={{
+                width: '100%',
+                height: '100%',
+                resizeMode: 'contain',
+              }}
+            />
+          </Animated.View>
+        </GestureDetector>
         <Image style={styles.innerClock} source={InnerClock} />
-
         <View style={styles.timerOverlay}>
           <Text style={styles.timerText}>{formatTime(timeLeft)}</Text>
         </View>
